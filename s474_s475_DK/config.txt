@@ -1,0 +1,8 @@
+# The name of the experiment has to set here
+# If your setup file is setup_XXX_YYY_ZZZ.C
+# then you should write here  NameExperiment XXX_YYY_ZZZ
+# when you setup a new setup_XXX_YY_ZZ.C please define
+# the function inside of the file with the same name as the file
+
+#NameExperiment    s475plus_70Br_FRS05
+NameExperiment    s475plus_70Br_FRS05_a

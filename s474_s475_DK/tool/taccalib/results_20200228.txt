@@ -1,0 +1,35 @@
+***********Without two extrem peaks************
+Processing tool/taccalib/taccalib.C...
+newVME01_12_05: Mean=  454.879   Std=  3.78599   Ps/ch=  21.9838
+newVME01_12_06: Mean=   462.19   Std=  3.98119   Ps/ch=  21.6361
+newVME01_12_07: Mean=   469.47   Std=  3.80055   Ps/ch=  21.3006
+newVME01_12_08: Mean=  407.092   Std=  179.558   Ps/ch=  24.5644
+newVME01_12_09: Mean=  479.806   Std=  4.53219   Ps/ch=  20.8417
+newVME01_12_10: Mean=  500.044   Std=  4.82019   Ps/ch=  19.9982
+newVME01_12_11: Mean=  947.469   Std=     -nan   Ps/ch=  10.5544
+newVME01_12_12: Mean=   499.74   Std=  3.58242   Ps/ch=  20.0104
+newVME01_12_13: Mean=  468.124   Std=  2.68226   Ps/ch=  21.3619
+newVME01_12_14: Mean=  490.399   Std=  3.56114   Ps/ch=  20.3915
+newVME01_12_15: Mean=  473.276   Std=     2.93   Ps/ch=  21.1293
+root [1] .q
+profi@lxg1265:$> root -l tool/taccalib/taccalib.C 
+root [0] 
+***********With two extrem peaks**************
+Processing tool/taccalib/taccalib.C...
+newVME01_12_05: Mean=  450.831   Std=  4.92831   Ps/ch=  22.1813
+newVME01_12_06: Mean=  456.335   Std=  6.38019   Ps/ch=  21.9137
+newVME01_12_07: Mean=  457.489   Std=  11.5476   Ps/ch=  21.8584
+newVME01_12_08: Mean=  368.563   Std=  159.623   Ps/ch=  27.1324
+newVME01_12_09: Mean=  478.994   Std=  3.77414   Ps/ch=  20.8771
+newVME01_12_10: Mean=  497.758   Std=  4.45454   Ps/ch=  20.0901
+newVME01_12_11: Mean=   943.94   Std=  2.49482   Ps/ch=  10.5939
+newVME01_12_12: Mean=  497.603   Std=  3.51604   Ps/ch=  20.0964
+newVME01_12_13: Mean=  459.395   Std=  8.39349   Ps/ch=  21.7678
+newVME01_12_14: Mean=  489.263   Std=  3.08727   Ps/ch=  20.4389
+newVME01_12_15: Mean=  461.761   Std=  10.9453   Ps/ch=  21.6562
+
+
+*************************************
+After swapping channels without extremes
+newVME01_12_07: Mean=  470.908   Std=  3.49393   Ps/ch=  21.2356
+newVME01_12_08: Mean=  469.591   Std=  3.97577   Ps/ch=  21.2951
