@@ -51,11 +51,10 @@ void friend_trees(TString file1, TString file2, TString file3){
   TH1F *h_z2   = new TH1F("h_z2","Atomic number",100,30,40);
   TH2F *h_id   = new TH2F("h_id","ID plot",500,1.9,2.4,500,30,40);
   TH2F *h_det1   = new TH2F("h_det1","Detector 1 (gsi06), all events",1024,0,1024,1000,-1000,3500);
-  TH2F *h_det1_cut   = new TH2F("h_det1_cut","Detector 1 (gsi06), cut on A/Q ~ 2, Z ~ 36 ",1024,0,1024,1000,-1000,3500);
-  TH2F *h_det2   = new TH2F("h_det2","Detector 2 (gsi04), all events",1024,0,1024,1000,-1000,3500);
-  TH2F *h_det2_cut   = new TH2F("h_det2_cut","Detector 2 (gsi04), cut on A/Q ~ 2, Z ~ 36 ",1024,0,1024,1000,-1000,3500);
-  TH2F *h_det3   = new TH2F("h_det3","Detector 3 (gsi08), all events",1024,0,1024,1000,-1000,3500);
-  TH2F *h_det3_cut   = new TH2F("h_det3_cut","Detector 3 (gsi08), cut on A/Q ~ 2, Z ~ 36 ",1024,0,1024,1000,-1000,3500);
+  TH2F *h_det1_cut   = new TH2F("h_det1_cut","Detector 1 (gsi06) after selection ",1024,0,1024,1000,-1000,3500);
+  TH2F *h_id_cut   = new TH2F("h_id_cut","ID plot after selection ",500,1.9,2.4,500,30,40);
+  
+
   // ****************************
 
   // *** loop over entries to the tree (i.e. loop over events)
@@ -80,13 +79,14 @@ void friend_trees(TString file1, TString file2, TString file3){
       for (Int_t j=0; j<1024; j++) {
         h_det1_cut->Fill(SST1I[j],SST1E[j]); // histo filled with selected events
       }
+      h_id_cut->Fill(AoQ,z2);
     }
   }
   // *** end of loop over entries **************************
   cout << "Number of selected ions is " << sel_ev.size() << endl;
 
   // *** drawing histograms in canvas ***
-  TCanvas *c = new TCanvas("c","ID plot",0,0,1400,1100);
+  TCanvas *c = new TCanvas("c","Identification",0,0,1400,1100);
   c->Divide(2,3);
   c->cd(1);
   h_AoQ->GetXaxis()->SetTitleSize(0.05);
@@ -122,6 +122,8 @@ void friend_trees(TString file1, TString file2, TString file3){
   h_det1_cut->GetYaxis()->CenterTitle();
   h_det1_cut->GetYaxis()->SetTitle("Energy deposit (ADC units)");   
   h_det1_cut->Draw("col");
+  c->cd(6);
+  h_id_cut->Draw("col");
   // ************************************
 
   // just some printout of the strips fired for the selected isotope
@@ -131,7 +133,6 @@ void friend_trees(TString file1, TString file2, TString file3){
 
   // *** creating graphs to draw num selected events in event-by-event mode***
   Int_t num = 12;
-
   // *** drawing graphs in canvas ***
   TCanvas *c1 = new TCanvas("c1","Detector 1 (gsi06)",1100,0,1400,1400);
   c1->Divide(3,4);
@@ -184,16 +185,10 @@ void friend_trees(TString file1, TString file2, TString file3){
     g3[i]->Draw();
   }
   // ************************************
-
-  h_AoQ->Write();
-  h_z2->Write();
-  h_id->Write();
-  h_det1->Write();
-  h_det1_cut->Write();
+  c->Write();
   c1->Write();
   c2->Write();
   c3->Write();
   frs_file->Close();
   out->Close();
- 
 }
