@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void friend_trees(TString file1, TString file2){
+void friend_trees(TString file1, TString file2, TString file3){
 
   // open file with FRS data (upacked using go4)
   TFile *frs_file = new TFile(file1.Data());
@@ -16,6 +16,9 @@ void friend_trees(TString file1, TString file2){
   // friend tree with FRS data with the tree with DSSD data (DSSD data unpacked using ucesb)
   TFriendElement *ucesb = frs_tree->AddFriend("h101",file2.Data()); 
   // now all data is in FRS tree
+
+  // create file to save data in
+  TFile *out = new TFile(file3.Data(),"RECREATE");
 
   //some trick needed to read the tree
   frs_tree->SetMakeClass(1);
@@ -46,9 +49,13 @@ void friend_trees(TString file1, TString file2){
   // *** creating some histos ***
   TH1F *h_AoQ   = new TH1F("h_AoQ","Mass-over-charge ratio",100,0,4);
   TH1F *h_z2   = new TH1F("h_z2","Atomic number",100,30,40);
-  TH2F *h_id   = new TH2F("h_id","ID plot",100,1.9,2.4,100,30,40);
-  TH2F *h_det1   = new TH2F("h_det1","Detector 1, all events",1024,0,1024,1000,-1000,3500);
-  TH2F *h_det1_cut   = new TH2F("h_det1_cut","Detector 1, cut on isotope",1024,0,1024,1000,-1000,3500);
+  TH2F *h_id   = new TH2F("h_id","ID plot",500,1.9,2.4,500,30,40);
+  TH2F *h_det1   = new TH2F("h_det1","Detector 1 (gsi06), all events",1024,0,1024,1000,-1000,3500);
+  TH2F *h_det1_cut   = new TH2F("h_det1_cut","Detector 1 (gsi06), cut on A/Q ~ 2, Z ~ 36 ",1024,0,1024,1000,-1000,3500);
+  TH2F *h_det2   = new TH2F("h_det2","Detector 2 (gsi04), all events",1024,0,1024,1000,-1000,3500);
+  TH2F *h_det2_cut   = new TH2F("h_det2_cut","Detector 2 (gsi04), cut on A/Q ~ 2, Z ~ 36 ",1024,0,1024,1000,-1000,3500);
+  TH2F *h_det3   = new TH2F("h_det3","Detector 3 (gsi08), all events",1024,0,1024,1000,-1000,3500);
+  TH2F *h_det3_cut   = new TH2F("h_det3_cut","Detector 3 (gsi08), cut on A/Q ~ 2, Z ~ 36 ",1024,0,1024,1000,-1000,3500);
   // ****************************
 
   // *** loop over entries to the tree (i.e. loop over events)
@@ -68,7 +75,7 @@ void friend_trees(TString file1, TString file2){
     }
 
     // selection of one isotope in ID plot, may be 68Se, to be checked
-    if(AoQ > 1.99 && AoQ < 2.01 && z2 > 35.4 && z2 < 36.0) {
+    if(AoQ > 1.98 && AoQ < 2.01 && z2 > 35.4 && z2 < 36.5) {
       sel_ev.push_back(i); // filling vector with number of strips fallen into selection
       for (Int_t j=0; j<1024; j++) {
         h_det1_cut->Fill(SST1I[j],SST1E[j]); // histo filled with selected events
@@ -76,6 +83,7 @@ void friend_trees(TString file1, TString file2){
     }
   }
   // *** end of loop over entries **************************
+  cout << "Number of selected ions is " << sel_ev.size() << endl;
 
   // *** drawing histograms in canvas ***
   TCanvas *c = new TCanvas("c","ID plot",0,0,1400,1100);
@@ -121,32 +129,71 @@ void friend_trees(TString file1, TString file2){
     //cout << "Selected event " << sel_ev[i] << endl; 
   }
 
-  // *** creating histograms to draw num selected events in event-by-event mode***
-  Int_t num = 8;
-  TH2F** h = new TH2F*[num];
-  for (Int_t i = 0; i < num; i++) {
-    h[i] = new TH2F(TString::Format("h_det1_event_%d", i), TString::Format("Event number %d with applied selection", i),1024,0,1024,1000,-500,5500);
+  // *** creating graphs to draw num selected events in event-by-event mode***
+  Int_t num = 12;
 
-    h[i]->GetXaxis()->SetTitleSize(0.05);
-    h[i]->GetXaxis()->SetTitle("Strip number");
-    h[i]->GetXaxis()->CenterTitle();
-    h[i]->GetYaxis()->SetTitleSize(0.05); 
-    h[i]->GetYaxis()->CenterTitle();   
-    h[i]->GetYaxis()->SetTitle("Energy deposit (ADC units)");
-    h[i]->SetMarkerStyle(kFullCircle);
-  }
-
-  // *** drawing histograms in canvas ***
-  TCanvas *c2 = new TCanvas("c2","Detector 1",1100,0,1400,1400);
-  c2->Divide(2,4);
+  // *** drawing graphs in canvas ***
+  TCanvas *c1 = new TCanvas("c1","Detector 1 (gsi06)",1100,0,1400,1400);
+  c1->Divide(3,4);
+  TGraph** g1 = new TGraph*[num];
   for(Int_t i = 0; i < num; i++) {
     frs_tree->GetEntry(sel_ev[i]);
-    for (Int_t j = 0; j < 1024; j++) {
-      h[i]->Fill(SST1I[j],SST1E[j]);
-    }
+    g1[i] = new TGraph(1024,SST1I,SST1E);
+    g1[i]->SetTitle(TString::Format("Detector 1 (gsi06), event %d for selected ion", i));
+    g1[i]->GetXaxis()->SetTitleSize(0.05);
+    g1[i]->GetXaxis()->SetTitle("Strip number");
+    g1[i]->GetXaxis()->CenterTitle();
+    g1[i]->GetYaxis()->SetTitleSize(0.05); 
+    g1[i]->GetYaxis()->CenterTitle();   
+    g1[i]->GetYaxis()->SetTitle("Energy deposit (ADC units)");     
+    c1->cd(i+1);
+    g1[i]->Draw();
+  }
+
+  TCanvas *c2 = new TCanvas("c2","Detector 2 (gsi04)",1100,0,1400,1400);
+  c2->Divide(3,4);
+  TGraph** g2 = new TGraph*[num];
+  for(Int_t i = 0; i < num; i++) {
+    frs_tree->GetEntry(sel_ev[i]);
+    g2[i] = new TGraph(1024,SST2I,SST2E);
+    g2[i]->SetTitle(TString::Format("Detector 2 (gsi04), event %d for selected ion", i));
+    g2[i]->GetXaxis()->SetTitleSize(0.05);
+    g2[i]->GetXaxis()->SetTitle("Strip number");
+    g2[i]->GetXaxis()->CenterTitle();
+    g2[i]->GetYaxis()->SetTitleSize(0.05); 
+    g2[i]->GetYaxis()->CenterTitle();   
+    g2[i]->GetYaxis()->SetTitle("Energy deposit (ADC units)");     
     c2->cd(i+1);
-    h[i]->Draw();
+    g2[i]->Draw();
+  }
+
+  TCanvas *c3 = new TCanvas("c3","Detector 3 (gsi08)",1100,0,1400,1400);
+  c3->Divide(3,4);
+  TGraph** g3 = new TGraph*[num];
+  for(Int_t i = 0; i < num; i++) {
+    frs_tree->GetEntry(sel_ev[i]);
+    g3[i] = new TGraph(1024,SST3I,SST3E);
+    g3[i]->SetTitle(TString::Format("Detector 3 (gsi08), event %d for selected ion", i));
+    g3[i]->GetXaxis()->SetTitleSize(0.05);
+    g3[i]->GetXaxis()->SetTitle("Strip number");
+    g3[i]->GetXaxis()->CenterTitle();
+    g3[i]->GetYaxis()->SetTitleSize(0.05); 
+    g3[i]->GetYaxis()->CenterTitle();   
+    g3[i]->GetYaxis()->SetTitle("Energy deposit (ADC units)");     
+    c3->cd(i+1);
+    g3[i]->Draw();
   }
   // ************************************
 
+  h_AoQ->Write();
+  h_z2->Write();
+  h_id->Write();
+  h_det1->Write();
+  h_det1_cut->Write();
+  c1->Write();
+  c2->Write();
+  c3->Write();
+  frs_file->Close();
+  out->Close();
+ 
 }
