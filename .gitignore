@@ -1,3 +1,8 @@
 ./parammodi_files
 *.ods
 ./sid_files_daq
+./s474_s475_DK/src/*.o
+./s474_s475_DK/src/*.d
+./s474_s475_DK/src/*.pcm
+./s474_s475_DK/src/*.so
+s474_s475_DK/src/G__FRSonline.cxx

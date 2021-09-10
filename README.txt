@@ -15,11 +15,13 @@ In more detail:
 /cvmfs/csee.gsi.de/root/618-04/bin/root
 . /cvmfs/csee.gsi.de/go4/600-00/go4login
 Code is from /u/profi/NewGo4_2020/s474_s475
-I use copy locally at /u/dkostyl/experiment_march_2020/ANALYSIS/s474_s475_DK !check setup file!
+I use copy locally at /u/dkostyl/experiment_march_2020/s475plus_analysis !check setup file!
 To unpack several files:
 go4analysis -lib libGo4UserAnalysis.so -file /data.local2/s475plus_data/lmd/s475plus_70Br_246-298.lml -disable-asf -step Analysis -enable-store -store /data.local2/s475plus_data/root/converted/s475plus_70Br_246-298_frs.root
 
-3. ucesb requires correct file sidped_daq.txt for unpacking (correct means the one used while compressing the data). This file sidped_daq.txt is the same as sidped.txt, which is saved in ./sid_files_daq/ along with others used for compressing during experiment. ucesb should be compiled with the correct version of sidped_daq.txt file!!! The latter is done at dkostyl user
+3. ucesb requires correct file sidped_daq.txt for unpacking (correct means the one used while compressing the data). This file sidped_daq.txt is the same as sidped.txt, which is saved in ./sid_files_daq/ along with others used for compressing during experiment. ucesb should be compiled with the correct version of sidped_daq.txt file!!! The latter is done at dkostyl user in 
+~/LOS_synch/upexps/202003_s474s475p/
+Version of root needed is invoked by r3broot alias.
 To unpack several files:
 ./202003_s474s475p \
 $(cat /data.local2/s475plus_data/lmd/s475plus_70Br_246-298.lml) \
@@ -28,3 +30,5 @@ $(cat /data.local2/s475plus_data/lmd/s475plus_70Br_246-298.lml) \
 4. Subtraction of pedestals in done using macros from ./scripts_subtr_pedest 
 
 5. Specify the names of two converted files in run_friend_trees.sh file, run it. The actual macro for analysis is friend_trees.C , it is self-explaining
+
+Note: pedestal files are unpacked with ~/experiment_march_2020/go4_siderem_frs code with root6 and go4 5 
